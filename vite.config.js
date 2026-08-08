@@ -2,18 +2,29 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
 
 export default defineConfig({
+    resolve: {
+        alias: {
+            '@': path.resolve(import.meta.dirname, 'resources/js'),
+        },
+    },
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/css/app.css', 'resources/js/app.tsx'],
             refresh: true,
             fonts: [
-                bunny('Instrument Sans', {
+                bunny('Inter', {
                     weights: [400, 500, 600],
+                }),
+                bunny('Poppins', {
+                    weights: [500, 600, 700],
                 }),
             ],
         }),
+        react(),
         tailwindcss(),
     ],
     server: {

@@ -1,0 +1,13 @@
+export function formatNumber(value: number): string {
+  return new Intl.NumberFormat('id-ID').format(value);
+}
+
+export function formatDate(iso: string | null): string {
+  if (!iso) return '';
+
+  return new Intl.DateTimeFormat('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(iso));
+}

@@ -60,6 +60,17 @@ return [
             'report' => false,
         ],
 
+        // Disk kustom: menulis langsung ke public/uploads, tanpa symlink
+        // (storage:link sering gagal di cPanel karena izin symlink terbatas).
+        'uploads' => [
+            'driver' => 'local',
+            'root' => public_path('uploads'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/uploads',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
     ],
 
     /*

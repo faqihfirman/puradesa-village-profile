@@ -1,29 +1,32 @@
 import { Link, usePage } from '@inertiajs/react';
 import { Mail, Menu, Phone, X } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
+import logo from '@/assets/homepage/logo-puraseda.webp';
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from '@/Components/SocialIcons';
-import { formatNumber } from '@/lib/format';
 import type { SharedProps } from '@/types';
 
 const NAV_ITEMS = [
   { label: 'Beranda', href: '/' },
   { label: 'Profil Desa', href: '/profil-desa' },
   { label: 'Artikel', href: '/artikel' },
-  { label: 'Potensi & Wisata', href: '/potensi-wisata' },
+  { label: 'Potensi Wisata', href: '/potensi-wisata' },
+  { label: 'UMKM', href: '/umkm' },
   { label: 'Kontak', href: '/kontak' },
 ];
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
-  const { props, url } = usePage<{ site: SharedProps['site']; village: SharedProps['village']; visitors: SharedProps['visitors'] }>();
-  const { site, village, visitors } = props;
+  const { props, url } = usePage<{ village: SharedProps['village'] }>();
+  const { village } = props;
+  const { contact } = village;
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-primary">
-        <div className="mx-auto flex max-w-container items-center justify-between px-4 py-4 md:px-6">
-          <Link href="/" className="font-display text-lg font-bold text-on-primary">
-            {village.name}
+        <div className="mx-auto flex max-w-container items-center justify-between px-4 py-5 md:px-6">
+          <Link href="/" className="flex items-center gap-3">
+            <img src={logo} alt="" aria-hidden="true" className="h-9 w-9 shrink-0 object-contain" />
+            <span className="font-display text-lg font-bold text-on-primary">{village.name}</span>
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
@@ -34,7 +37,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`font-display text-sm ${isActive ? 'font-semibold text-on-primary' : 'text-on-primary/80 hover:text-on-primary'}`}
+                  className={`font-display text-md ${isActive ? 'font-semibold text-on-primary' : 'text-on-primary/80 hover:text-on-primary'}`}
                 >
                   {item.label}
                 </Link>
@@ -72,10 +75,13 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <main className="flex-1">{children}</main>
 
       <footer className="bg-primary text-on-primary">
-        <div className="mx-auto grid max-w-container gap-10 px-4 py-16 md:grid-cols-4 md:px-6">
-          <div className="flex flex-col gap-3">
-            <span className="font-display text-lg font-bold">{village.officeName}</span>
-            <p className="text-sm text-on-primary/70">{site.address}</p>
+        <div className="mx-auto grid max-w-container gap-10 px-4 py-16 md:grid-cols-3 md:px-6">
+          <div className="flex items-start gap-4">
+            <img src={logo} alt="" aria-hidden="true" className="h-16 w-16 shrink-0 object-contain" />
+            <div className="flex flex-col gap-2">
+              <span className="font-display text-lg font-bold">{village.officeName}</span>
+              <p className="text-sm text-on-primary/70">{contact.address}</p>
+            </div>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -93,36 +99,34 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
             <span className="font-display text-sm font-semibold uppercase tracking-wider text-on-primary/60">
               Hubungi Kami
             </span>
-            <a href={`tel:${site.phone}`} className="flex items-center gap-2 text-sm text-on-primary/80 hover:text-on-primary">
-              <Phone className="h-4 w-4" /> {site.phone}
+            <a href={`tel:${contact.phone}`} className="flex items-center gap-2 text-sm text-on-primary/80 hover:text-on-primary">
+              <Phone className="h-4 w-4" /> {contact.phone}
             </a>
-            <a href={`mailto:${site.email}`} className="flex items-center gap-2 text-sm text-on-primary/80 hover:text-on-primary">
-              <Mail className="h-4 w-4" /> {site.email}
+            <a href={`mailto:${contact.email}`} className="flex items-center gap-2 text-sm text-on-primary/80 hover:text-on-primary">
+              <Mail className="h-4 w-4" /> {contact.email}
             </a>
+            {contact.social.instagram && (
+              <a
+                href={contact.social.instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 text-sm text-on-primary/80 hover:text-on-primary"
+              >
+                <InstagramIcon className="h-4 w-4" /> @desapuraseda
+              </a>
+            )}
             <div className="flex items-center gap-3 pt-1">
-              {site.social.facebook && (
-                <a href={site.social.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
+              {contact.social.facebook && (
+                <a href={contact.social.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
                   <FacebookIcon className="h-5 w-5 text-on-primary/80 hover:text-on-primary" />
                 </a>
               )}
-              {site.social.instagram && (
-                <a href={site.social.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
-                  <InstagramIcon className="h-5 w-5 text-on-primary/80 hover:text-on-primary" />
-                </a>
-              )}
-              {site.social.youtube && (
-                <a href={site.social.youtube} target="_blank" rel="noreferrer" aria-label="YouTube">
+              {contact.social.youtube && (
+                <a href={contact.social.youtube} target="_blank" rel="noreferrer" aria-label="YouTube">
                   <YoutubeIcon className="h-5 w-5 text-on-primary/80 hover:text-on-primary" />
                 </a>
               )}
             </div>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <span className="font-display text-sm font-semibold uppercase tracking-wider text-on-primary/60">
-              Pengunjung Hari Ini
-            </span>
-            <span className="font-display text-3xl font-bold text-accent">{formatNumber(visitors.today)}</span>
           </div>
         </div>
 

@@ -1,28 +1,20 @@
 import { Head } from '@inertiajs/react';
-import { Home as HomeIcon, Landmark, Mountain, Users } from 'lucide-react';
+import heroPhoto from '@/assets/homepage/hero-section.jpg';
+import villageHeadPhoto from '@/assets/homepage/asep-ruhiyat.jpg';
 import ArticleCard from '@/Components/ArticleCard';
 import Button from '@/Components/Button';
-import StatCard from '@/Components/StatCard';
+import VillageCalendar from '@/Components/VillageCalendar';
 import PublicLayout from '@/Layouts/PublicLayout';
-import { formatNumber } from '@/lib/format';
 import type { HomeProps } from '@/types';
 
-export default function Home({ hero, villageHead, stats, latestArticles }: HomeProps) {
+export default function Home({ hero, villageHead, events, latestArticles }: HomeProps) {
   return (
     <PublicLayout>
       <Head title="Beranda" />
 
       {/* Hero */}
       <section className="relative flex min-h-[70vh] items-end overflow-hidden bg-primary">
-        {hero.imageUrl && (
-          <img
-            src={hero.imageUrl}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="eager"
-            fetchPriority="high"
-          />
-        )}
+        <img src={heroPhoto} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-primary/40" />
 
         <div className="relative mx-auto w-full max-w-container px-4 pb-16 md:px-6">
@@ -34,33 +26,43 @@ export default function Home({ hero, villageHead, stats, latestArticles }: HomeP
             <Button href={hero.ctaPrimary.url} variant="accent">
               {hero.ctaPrimary.label}
             </Button>
-            <Button href={hero.ctaSecondary.url} variant="secondary" className="border-white text-white hover:bg-white/10">
-              {hero.ctaSecondary.label}
-            </Button>
           </div>
         </div>
+
+        <svg
+          className="absolute inset-x-0 bottom-0 h-16 w-full text-background-alt md:h-24"
+          viewBox="0 0 1200 96"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M0,64 C300,112 900,16 1200,64 L1200,96 L0,96 Z" fill="currentColor" />
+        </svg>
       </section>
 
       {/* Sambutan Kepala Desa */}
       {villageHead && (
         <section className="bg-background-alt py-section-mobile md:py-section-desktop">
           <div className="mx-auto max-w-container px-4 md:px-6">
-            <div className="flex flex-col gap-8 rounded-card border-l-4 border-primary bg-surface p-8 md:flex-row md:items-center md:p-12">
-              {villageHead.photoUrl && (
-                <img
-                  src={villageHead.photoUrl}
-                  alt={villageHead.name}
-                  className="h-32 w-32 flex-shrink-0 rounded-card object-cover md:h-40 md:w-40"
-                />
-              )}
-              <div className="flex flex-col gap-4">
-                <h2 className="font-display text-xl font-semibold text-ink">Pesan Kepala Desa</h2>
-                <p className="font-display text-lg italic leading-relaxed text-body md:text-xl">
+            <h2 className="font-display text-2xl font-semibold text-ink md:text-3xl">Sambutan Kepala Desa</h2>
+
+            <div className="mt-8 grid gap-8 border-l-4 border-primary pl-6 md:grid-cols-[220px_1fr] md:gap-10 md:pl-10">
+              <img
+                src={villageHead.photoUrl ?? villageHeadPhoto}
+                alt={`${villageHead.name}, ${villageHead.position} Desa Puraseda`}
+                width={220}
+                height={220}
+                loading="lazy"
+                className="aspect-square w-36 rounded-input object-cover object-top md:w-full"
+              />
+
+              <div className="flex flex-col">
+                <blockquote className="max-w-2xl font-display text-lg leading-relaxed text-body md:text-xl md:leading-relaxed">
                   &ldquo;{villageHead.message}&rdquo;
-                </p>
-                <div>
-                  <p className="font-display text-sm font-semibold text-ink">{villageHead.name}</p>
-                  <p className="text-sm text-muted">{villageHead.position}</p>
+                </blockquote>
+
+                <div className="mt-6 border-t border-border pt-4 md:mt-auto">
+                  <p className="font-display text-base font-semibold text-ink">{villageHead.name}</p>
+                  <p className="text-sm text-muted">{villageHead.position} Desa Puraseda</p>
                 </div>
               </div>
             </div>
@@ -68,14 +70,14 @@ export default function Home({ hero, villageHead, stats, latestArticles }: HomeP
         </section>
       )}
 
-      {/* Statistik */}
-      {stats && (
+      {/* Kalender Desa */}
+      {events.length > 0 && (
         <section className="bg-background py-section-mobile md:py-section-desktop">
-          <div className="mx-auto grid max-w-container grid-cols-2 gap-4 px-4 md:grid-cols-4 md:gap-6 md:px-6">
-            <StatCard icon={Users} value={`${formatNumber(stats.population)}+`} label="Penduduk" />
-            <StatCard icon={HomeIcon} value={`${formatNumber(stats.families)}+`} label="Kepala Keluarga" />
-            <StatCard icon={Landmark} value={String(stats.hamlets)} label="Dusun" />
-            <StatCard icon={Mountain} value={`${stats.areaSize} ${stats.areaUnit}`} label="Wilayah" />
+          <div className="mx-auto max-w-container px-4 md:px-6">
+            <h2 className="font-display text-2xl font-semibold text-ink md:text-3xl">Kalender Desa</h2>
+            <div className="mt-8">
+              <VillageCalendar events={events} />
+            </div>
           </div>
         </section>
       )}

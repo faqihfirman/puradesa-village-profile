@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\SiteSetting;
+use App\Models\VillageEvent;
 use App\Models\VillageHeadMessage;
-use App\Models\VillageProfile;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,16 +13,12 @@ class HomeController extends Controller
     public function __invoke(): Response
     {
         $villageHead = VillageHeadMessage::first();
-        $profile = VillageProfile::first();
-        $siteSetting = SiteSetting::first();
 
         return Inertia::render('Home', [
             'hero' => [
                 'title' => config('village.hero.title'),
                 'subtitle' => config('village.hero.subtitle'),
                 'ctaPrimary' => config('village.hero.cta_primary'),
-                'ctaSecondary' => config('village.hero.cta_secondary'),
-                'imageUrl' => $siteSetting?->hero_image_url,
             ],
             'villageHead' => $villageHead ? [
                 'name' => $villageHead->name,
@@ -31,13 +26,16 @@ class HomeController extends Controller
                 'message' => $villageHead->message,
                 'photoUrl' => $villageHead->photo_url,
             ] : null,
-            'stats' => $profile ? [
-                'population' => $profile->total_population,
-                'families' => $profile->total_families,
-                'hamlets' => $profile->total_hamlets,
-                'areaSize' => (float) $profile->area_size,
-                'areaUnit' => $profile->area_unit,
-            ] : null,
+            'events' => VillageEvent::orderBy('date')
+                ->get()
+                ->map(fn (VillageEvent $event) => [
+                    'name' => $event->name,
+                    'date' => $event->date->toDateString(),
+                    'startTime' => $event->start_time ? substr($event->start_time, 0, 5) : null,
+                    'endTime' => $event->end_time ? substr($event->end_time, 0, 5) : null,
+                    'location' => $event->location,
+                    'description' => $event->description,
+                ]),
             'latestArticles' => Article::published()
                 ->with('category')
                 ->latest('published_at')

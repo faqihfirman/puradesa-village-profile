@@ -21,7 +21,7 @@ class HomePageTest extends TestCase
                 ->component('Home')
                 ->has('hero')
                 ->has('villageHead')
-                ->has('stats')
+                ->has('events', 3)
                 ->has('latestArticles', 3)
             );
     }
@@ -33,7 +33,7 @@ class HomePageTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Home')
                 ->where('villageHead', null)
-                ->where('stats', null)
+                ->where('events', [])
                 ->where('latestArticles', [])
             );
     }

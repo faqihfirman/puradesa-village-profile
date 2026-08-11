@@ -16,6 +16,7 @@ use Filament\Schemas\Components\EmbeddedSchema;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Storage;
 
 class ManageVillageHeadMessage extends Page
 {
@@ -92,9 +93,14 @@ class ManageVillageHeadMessage extends Page
 
     public function save(): void
     {
+        $message = VillageHeadMessage::current();
         $data = $this->form->getState();
 
-        VillageHeadMessage::current()->update($data);
+        if ($message->photo_path && $message->photo_path !== ($data['photo_path'] ?? null)) {
+            Storage::disk('uploads')->delete($message->photo_path);
+        }
+
+        $message->update($data);
 
         Notification::make()
             ->title('Sambutan kepala desa berhasil disimpan')

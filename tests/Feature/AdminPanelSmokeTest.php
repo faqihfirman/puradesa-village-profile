@@ -22,14 +22,14 @@ class AdminPanelSmokeTest extends TestCase
 
     public function test_login_page_renders(): void
     {
-        $this->get('http://admin.desapuraseda.test/login')->assertStatus(200);
+        $this->get('/admin/login')->assertStatus(200);
     }
 
     public function test_dashboard_renders_for_superadmin(): void
     {
         $this->actingAsSuperAdmin();
 
-        $this->get('http://admin.desapuraseda.test/')->assertStatus(200);
+        $this->get('/admin')->assertStatus(200);
     }
 
     #[DataProvider('resourceIndexRoutes')]
@@ -37,7 +37,7 @@ class AdminPanelSmokeTest extends TestCase
     {
         $this->actingAsSuperAdmin();
 
-        $this->get("http://admin.desapuraseda.test/{$path}")->assertStatus(200);
+        $this->get("/admin/{$path}")->assertStatus(200);
     }
 
     public static function resourceIndexRoutes(): array
@@ -50,11 +50,12 @@ class AdminPanelSmokeTest extends TestCase
             ['missions'],
             ['officials'],
             ['hamlets'],
+            ['village-events'],
             ['contact-messages'],
             ['users'],
             ['manage-village-profile'],
+            ['manage-village-statistics'],
             ['manage-village-head-message'],
-            ['manage-site-settings'],
         ];
     }
 
@@ -63,7 +64,7 @@ class AdminPanelSmokeTest extends TestCase
         $this->seed(DatabaseSeeder::class);
         $this->actingAsSuperAdmin();
 
-        $this->get('http://admin.desapuraseda.test/articles')
+        $this->get('/admin/articles')
             ->assertStatus(200)
             ->assertSee('Musyawarah Desa Bahas Rencana Pembangu');
     }
@@ -73,6 +74,6 @@ class AdminPanelSmokeTest extends TestCase
         $user = User::factory()->create(['role' => User::ROLE_EDITOR]);
         $this->actingAs($user);
 
-        $this->get('http://admin.desapuraseda.test/destinations')->assertStatus(403);
+        $this->get('/admin/destinations')->assertStatus(403);
     }
 }

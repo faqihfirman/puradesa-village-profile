@@ -4,7 +4,7 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
     --font-display: 'Poppins', ui-sans-serif, system-ui, sans-serif;
 
@@ -61,4 +61,78 @@
 body {
     background-color: var(--color-background);
     color: var(--color-body);
+}
+
+.article-body :where(p) {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
+}
+
+.article-body :where(p:last-child) {
+    margin-bottom: 0;
+}
+
+.article-body :where(h2) {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-ink);
+}
+
+.article-body :where(h3) {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-ink);
+}
+
+.article-body :where(ul, ol) {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+}
+
+.article-body :where(ul) {
+    list-style: disc;
+}
+
+.article-body :where(ol) {
+    list-style: decimal;
+}
+
+.article-body :where(li) {
+    margin-bottom: 0.5rem;
+}
+
+.article-body :where(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.article-body :where(blockquote) {
+    margin-bottom: 1.25rem;
+    border-left: 4px solid var(--color-primary);
+    padding-left: 1rem;
+    font-style: italic;
+    color: var(--color-body);
+}
+
+.article-body :where(img) {
+    margin: 1.5rem 0;
+    border-radius: var(--radius-card);
+}
+
+.article-body :where(table) {
+    width: 100%;
+    margin-bottom: 1.25rem;
+    border-collapse: collapse;
+}
+
+.article-body :where(td, th) {
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\SiteSetting;
 use App\Models\VisitorStat;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -37,35 +36,21 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $site = SiteSetting::current();
-
         return [
             ...parent::share($request),
-            'site' => [
-                'address' => $site->address,
-                'phone' => $site->phone,
-                'whatsapp' => $site->whatsapp,
-                'email' => $site->email,
-                'officeHours' => [
-                    'weekday' => $site->office_hours_weekday,
-                    'weekend' => $site->office_hours_weekend,
-                ],
-                'coordinates' => [
-                    'lat' => (float) $site->office_lat,
-                    'lng' => (float) $site->office_lng,
-                ],
-                'googleMapsUrl' => $site->google_maps_url,
-                'social' => array_filter([
-                    'facebook' => $site->facebook_url,
-                    'instagram' => $site->instagram_url,
-                    'youtube' => $site->youtube_url,
-                ]),
-            ],
             'village' => [
                 'name' => config('village.name'),
                 'officeName' => config('village.office_name'),
                 'district' => config('village.district'),
                 'regency' => config('village.regency'),
+                'contact' => [
+                    'address' => config('village.contact.address'),
+                    'phone' => config('village.contact.phone'),
+                    'email' => config('village.contact.email'),
+                    'mapsUrl' => config('village.contact.maps_url'),
+                    'hours' => config('village.contact.hours'),
+                    'social' => config('village.contact.social'),
+                ],
             ],
             'visitors' => [
                 'today' => VisitorStat::whereDate('date', today())->value('visits') ?? 0,
